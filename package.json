@@ -1,0 +1,22 @@
+{
+  "name": "vivid-wait",
+  "version": "1.0.0",
+  "description": "Simulate a lively wait operation",
+  "main": "index.js",
+  "scripts": {
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/huanjinliu/vivid-wait.git"
+  },
+  "keywords": [
+    "simulate waiting",
+    "wait"
+  ],
+  "author": "huanjinliu",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/huanjinliu/vivid-wait/issues"
+  },
+  "homepage": "https://github.com/huanjinliu/vivid-wait#readme"
+}
