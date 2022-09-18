@@ -1,6 +1,6 @@
 {
   "name": "vivid-wait",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Simulate a lively wait operation",
   "scripts": {
     "dev": "rollup --config -w",
