@@ -120,12 +120,12 @@ export async function wait<HandlerReturn>(
   const handlerPromise = handler ? handler() : Promise.resolve();
 
   const waitPromise = await pureWait(duration, mode, (percent: number) => {
-    onUpdate?.(percent * waitFinallyPercent);
+    onUpdate?.(Math.round(percent * waitFinallyPercent * 10000) / 10000);
   });
 
   const [handlerResult] = await Promise.all([handlerPromise, waitPromise]);
 
-  onUpdate?.(1);
+  if (handler) onUpdate?.(1);
 
   return handlerResult;
 }

@@ -92,10 +92,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
             let waitFinallyPercent = handler ? STAY_PERCENT_WHEN_HANDLE_TIMEOUT : 1;
             const handlerPromise = handler ? handler() : Promise.resolve();
             const waitPromise = yield pureWait(duration, mode, (percent) => {
-                onUpdate === null || onUpdate === void 0 ? void 0 : onUpdate(percent * waitFinallyPercent);
+                onUpdate === null || onUpdate === void 0 ? void 0 : onUpdate(Math.round(percent * waitFinallyPercent * 10000) / 10000);
             });
             const [handlerResult] = yield Promise.all([handlerPromise, waitPromise]);
-            onUpdate === null || onUpdate === void 0 ? void 0 : onUpdate(1);
+            if (handler)
+                onUpdate === null || onUpdate === void 0 ? void 0 : onUpdate(1);
             return handlerResult;
         });
     }
