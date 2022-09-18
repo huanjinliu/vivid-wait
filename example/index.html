@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>wait</title>
+  <style>
+    h5 {
+      text-align: center;
+      text-transform: uppercase;
+      letter-spacing: 10px;
+      color: #003973;
+    }
+    .container {
+      max-width: 500px;
+      margin: 50px auto;
+    }
+    .progress {
+      width: 0;
+      display: block;
+      height: 6px;
+      border-radius: 3px;
+      background: #003973;
+      background: -webkit-linear-gradient(to right, #E5E5BE, #003973);
+      background: linear-gradient(to right, #E5E5BE, #003973);
+      margin: 30px 0;
+      position: relative;
+    }
+    .progress::before {
+      content: attr(data-mode);
+      display: block;
+      position: absolute;
+      top: -20px;
+      font-size: 10px;
+      line-height: 20px;
+      color: #003973;
+      white-space: nowrap;
+    }
+  </style>
+</head>
+<body>
+  <h5>progress bars</h5>
+  <div class="container">
+    <strong class="progress" data-mode="linear"></strong>
+    <strong class="progress" data-mode="ease"></strong>
+    <strong class="progress" data-mode="ease-in"></strong>
+    <strong class="progress" data-mode="ease-out"></strong>
+    <strong class="progress" data-mode="ease-in-out"></strong>
+    <strong class="progress" data-mode="random"></strong>
+  </div>
+  <script type="module">
+    import { wait } from '../lib/index.esm.js';
+
+    async function drawProgressBars () {
+      const progressBars = document.querySelectorAll('.progress');
+
+      progressBars.forEach(async bar => {
+        await wait(5000, {
+          mode: bar.getAttribute('data-mode'),
+          onUpdate: (percent) => {
+            bar.style.width = `${percent * 100}%`
+          }
+        });
+      })
+    }
+
+    window.onload = drawProgressBars;
+  </script>
+</body>
+</html>
