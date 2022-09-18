@@ -1,8 +1,36 @@
+/**
+ * easing modes
+ */
+type EasingMode =
+  | 'linear'
+  | 'ease'
+  | 'ease-in'
+  | 'ease-out'
+  | 'ease-in-out'
+  | 'random';
 
+/**
+ * more options
+ */
+interface WaitOptions<HandlerReturn>
+  extends Partial<{
+    /**
+     * name of the easing mode
+     * @defaultValue The default is `random`
+     */
+    mode: EasingMode;
+    /**
+     * execute during the waiting process
+     */
+    handler: () => Promise<HandlerReturn> | HandlerReturn;
+    /**
+     * listen the update of time
+     * @remarks When the handler execution time exceeds the waiting time, the progress will be maintained at 99% until completed
+     */
+    onUpdate: (percent: number) => void;
+  }> {}
 
-type UpdateMode = 'linear' | 'ease' | 'ease-in' | 'ease-out' | 'ease-in-out' | 'random';
-
-const REQUIRE_DURATION = 16.6;                 // "requestAnimationFrame" one call need 1000ms/60(16.6ms)
+const REQUIRE_DURATION = 16.6; // "requestAnimationFrame" one call need 1000ms/60(16.6ms)
 const STAY_PERCENT_WHEN_HANDLE_TIMEOUT = 0.99;
 
 /**
@@ -10,7 +38,8 @@ const STAY_PERCENT_WHEN_HANDLE_TIMEOUT = 0.99;
  * @param {Function} handler callback
  */
 function requestAnimation(handler: FrameRequestCallback) {
-  if (typeof window !== 'undefined') return window.requestAnimationFrame(handler);
+  if (typeof window !== 'undefined')
+    return window.requestAnimationFrame(handler);
   // use setTimeout in a non-browser environment
   const timer = setTimeout(() => {
     handler(timer);
@@ -26,26 +55,32 @@ function requestAnimation(handler: FrameRequestCallback) {
  * @param {Function} onUpdate listen the update of time
  * @returns {Promise<number>} new percent
  */
-function pureWait(duration: number = 0, mode: UpdateMode, onUpdate?: (percent: number) => void): Promise<number> {
+function pureWait(
+  duration: number = 0,
+  mode: EasingMode,
+  onUpdate?: (percent: number) => void
+): Promise<number> {
   let percent = 0;
 
-  const easingFunctions: Record<UpdateMode, (timing: number) => number> = {
-    'ease': (timing) => (timing / duration) ** 4,
+  const easingFunctions: Record<EasingMode, (timing: number) => number> = {
+    ease: (timing) => (timing / duration) ** 4,
     'ease-in': (timing) => (timing / duration) ** 2,
     'ease-in-out': (timing) => {
       let t = timing / (duration / 2);
-      return t < 1 ? t ** 2 / 2 : -((--t) * (t - 2) - 1) / 2;
+      return t < 1 ? t ** 2 / 2 : -(--t * (t - 2) - 1) / 2;
     },
-    'ease-out': (timing) => - (timing / duration) * (timing / duration - 2),
-    'linear': (timing) => timing / duration,
-    'random': (timing) => percent + ((Math.random() * (timing / duration)) * (1 - percent)) ** 3,
+    'ease-out': (timing) => -(timing / duration) * (timing / duration - 2),
+    linear: (timing) => timing / duration,
+    random: (timing) =>
+      percent + (Math.random() * (timing / duration) * (1 - percent)) ** 3,
   };
 
   const modeKeys = Object.keys(easingFunctions);
 
-  const easingFunction = mode === 'random'
-    ? easingFunctions[modeKeys[Math.floor(Math.random() * modeKeys.length)]]
-    : easingFunctions[mode] ?? easingFunctions['random'];
+  const easingFunction =
+    mode === 'random'
+      ? easingFunctions[modeKeys[Math.floor(Math.random() * modeKeys.length)]]
+      : easingFunctions[mode] ?? easingFunctions['random'];
 
   return new Promise<number>((resolve) => {
     let initTime = new Date().getTime();
@@ -70,20 +105,13 @@ function pureWait(duration: number = 0, mode: UpdateMode, onUpdate?: (percent: n
 
 /**
  * simulate a wait operation with progress updates, i call it vivid-wait.
- * @param {number} duration total time in ms
- * @param {Object} options more configuration
- * @param {string} options.mode easing mode, the default value is random
- * @param {Function} options.handler execute during the waiting process, if the execution time exceeds the waiting time, the progress will stay at 0.99
- * @param {Function} options.onUpdate listen the update of progress
+ * @param {number} duration time to wait in ms
+ * @param {Object} options more options {@link WaitOptions}
  * @returns the result of the handler if it exists
  */
 export async function wait<HandlerReturn>(
   duration: number,
-  options: Partial<{
-    mode: UpdateMode,
-    handler: () => Promise<HandlerReturn>,
-    onUpdate: Function
-  }> = {}
+  options: WaitOptions<HandlerReturn> = {}
 ) {
   const { mode = 'random', handler, onUpdate } = options;
 

@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "target": "ES2015",
-    "module": "commonjs",
+    "module": "umd",
     "declaration": true,
     "esModuleInterop": true,
     "outDir": "./types",
