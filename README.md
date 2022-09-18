@@ -18,7 +18,7 @@ npm install vivid-wait -S
 import { wait } from 'vivid-wait';
 
 wait(5000).then(() => {
-	// execute after five seconds
+  // execute after five seconds
 })
 ```
 ### If want to control the completion time of the operation
@@ -30,7 +30,7 @@ wait(5000, {
   handler: () => new Promise((reslove) => {
     setTimeout(() => {
       reslove('vivid-wait');
-		}, 100);
+    }, 100);
   })
 }).then((result) => {
   // result will be obtained after a delay of five seconds
@@ -68,13 +68,15 @@ function drawProgressBars () {
       	bar.style.width = `${percent * 100}%`
       }
     }).then((result) => {
-			// execute after five seconds
+      // execute after five seconds
     });
   })
 }
 
 window.onload = drawProgressBars;
 ```
+
+#### example
 <p align="center">
   <img src="https://raw.githubusercontent.com/huanjinliu/vivid-wait/master/example/easing-modes.gif">
 </p>
