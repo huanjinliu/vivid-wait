@@ -76,7 +76,7 @@ function drawProgressBars () {
 window.onload = drawProgressBars;
 ```
 <p align="center">
-  <img src="./example/easing-modes.gif">
+  <img src="https://raw.githubusercontent.com/huanjinliu/vivid-wait/master/example/easing-modes.gif">
 </p>
 
 ## LICENSE
