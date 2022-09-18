@@ -17,7 +17,7 @@ const STAY_PERCENT_WHEN_HANDLE_TIMEOUT = 0.99;
  * @param {Function} handler callback
  */
 function requestAnimation(handler) {
-    if (window)
+    if (typeof window !== 'undefined')
         return window.requestAnimationFrame(handler);
     // use setTimeout in a non-browser environment
     const timer = setTimeout(() => {
