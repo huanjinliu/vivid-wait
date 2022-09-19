@@ -63,15 +63,15 @@ function pureWait(
   let percent = 0;
 
   const easingFunctions: Record<EasingMode, (timing: number) => number> = {
-    ease: (timing) => (timing / duration) ** 4,
+    'ease': (timing) => (timing / duration) ** 4,
     'ease-in': (timing) => (timing / duration) ** 2,
     'ease-in-out': (timing) => {
       let t = timing / (duration / 2);
       return t < 1 ? t ** 2 / 2 : -(--t * (t - 2) - 1) / 2;
     },
     'ease-out': (timing) => -(timing / duration) * (timing / duration - 2),
-    linear: (timing) => timing / duration,
-    random: (timing) =>
+    'linear': (timing) => timing / duration,
+    'random': (timing) =>
       percent + (Math.random() * (timing / duration) * (1 - percent)) ** 3,
   };
 

@@ -46,15 +46,15 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         var _a;
         let percent = 0;
         const easingFunctions = {
-            ease: (timing) => Math.pow((timing / duration), 4),
+            'ease': (timing) => Math.pow((timing / duration), 4),
             'ease-in': (timing) => Math.pow((timing / duration), 2),
             'ease-in-out': (timing) => {
                 let t = timing / (duration / 2);
                 return t < 1 ? Math.pow(t, 2) / 2 : -(--t * (t - 2) - 1) / 2;
             },
             'ease-out': (timing) => -(timing / duration) * (timing / duration - 2),
-            linear: (timing) => timing / duration,
-            random: (timing) => percent + Math.pow((Math.random() * (timing / duration) * (1 - percent)), 3),
+            'linear': (timing) => timing / duration,
+            'random': (timing) => percent + Math.pow((Math.random() * (timing / duration) * (1 - percent)), 3),
         };
         const modeKeys = Object.keys(easingFunctions);
         const easingFunction = mode === 'random'

@@ -21,6 +21,7 @@ wait(5000).then(() => {
   // execute after five seconds
 })
 ```
+
 ### If want to control the completion time of the operation
 
 ```javascript
@@ -54,7 +55,7 @@ wait(5000, {
 ```
 
 ```javascript
-import { wait } from '../dist/index.esm.js';
+import { wait } from 'vivid-wait';
 
 function drawProgressBars () {
   const progressBars = document.querySelectorAll('.progress');
@@ -63,7 +64,7 @@ function drawProgressBars () {
     wait(5000, {
       // the default easing mode is random
       mode: bar.getAttribute('data-mode'),
-      // When the handler execution time exceeds the waiting time, the progress will be maintained at 99% until completed
+      // when the handler execution time exceeds the waiting time, the progress will be maintained at 99% until completed
       onUpdate: (percent) => {
       	bar.style.width = `${percent * 100}%`
       }
@@ -80,6 +81,14 @@ window.onload = drawProgressBars;
 <p align="center">
   <img src="https://raw.githubusercontent.com/huanjinliu/vivid-wait/master/example/easing-modes.gif">
 </p>
+
+### If you don't use module in the browser
+
+``` javascript
+window.vividWait.wait(5000).then(() => {
+  // execute after five seconds
+})
+```
 
 ## LICENSE
 [MIT](LICENSE)
