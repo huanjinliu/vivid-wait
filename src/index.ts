@@ -27,7 +27,7 @@ interface WaitOptions<HandlerReturn>
      * listen the update of time
      * @remarks When the handler execution time exceeds the waiting time, the progress will be maintained at 99% until completed
      */
-    onUpdate: (percent: number) => void;
+    onUpdate: (percent: number, cancel?: () => void) => void;
   }> {}
 
 const REQUIRE_DURATION = 16.6; // "requestAnimationFrame" one call need 1000ms/60(16.6ms)
@@ -58,7 +58,7 @@ function requestAnimation(handler: FrameRequestCallback) {
 function pureWait(
   duration: number = 0,
   mode: EasingMode,
-  onUpdate?: (percent: number) => void
+  onUpdate?: (percent: number, cancel?: () => void) => void
 ): Promise<number> {
   let percent = 0;
 
@@ -85,6 +85,7 @@ function pureWait(
   return new Promise<number>((resolve) => {
     let initTime = new Date().getTime();
     let timing = 0;
+    let isCancel = false;
 
     const waiting = () => {
       requestAnimation(() => {
@@ -94,8 +95,12 @@ function pureWait(
           onUpdate?.(1);
           resolve(timing);
         } else {
-          onUpdate?.(percent);
-          waiting();
+          const cancel = () => {
+            isCancel = true;
+          };
+          onUpdate?.(percent, cancel);
+          if (isCancel) resolve(timing);
+          else waiting();
         }
       });
     };
@@ -119,9 +124,13 @@ export async function wait<HandlerReturn>(
 
   const handlerPromise = handler ? handler() : Promise.resolve();
 
-  const waitPromise = await pureWait(duration, mode, (percent: number) => {
-    onUpdate?.(Math.round(percent * waitFinallyPercent * 10000) / 10000);
-  });
+  const waitPromise = await pureWait(
+    duration,
+    mode,
+    (percent: number, cancel?: () => void) => {
+      onUpdate?.(Math.round(percent * waitFinallyPercent * 10000) / 10000, cancel);
+    }
+  );
 
   const [handlerResult] = await Promise.all([handlerPromise, waitPromise]);
 

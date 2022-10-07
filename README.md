@@ -65,8 +65,10 @@ function drawProgressBars () {
       // the default easing mode is random
       mode: bar.getAttribute('data-mode'),
       // when the handler execution time exceeds the waiting time, the progress will be maintained at 99% until completed
-      onUpdate: (percent) => {
+      onUpdate: (percent, cancel) => {
       	bar.style.width = `${percent * 100}%`
+        // you can cancel waiting when update, but need to pay attention to whether it is available when waiting finish
+        // if (cancel) cancel();
       }
     }).then((result) => {
       // execute after five seconds

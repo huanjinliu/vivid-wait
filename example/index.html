@@ -58,7 +58,7 @@
       progressBars.forEach(async bar => {
         await wait(5000, {
           mode: bar.getAttribute('data-mode'),
-          onUpdate: (percent) => {
+          onUpdate: (percent, cancel) => {
             bar.style.width = `${percent * 100}%`
           }
         });
