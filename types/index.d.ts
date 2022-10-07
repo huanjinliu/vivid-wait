@@ -19,7 +19,7 @@ interface WaitOptions<HandlerReturn> extends Partial<{
      * listen the update of time
      * @remarks When the handler execution time exceeds the waiting time, the progress will be maintained at 99% until completed
      */
-    onUpdate: (percent: number) => void;
+    onUpdate: (percent: number, cancel?: () => void) => void;
 }> {
 }
 /**

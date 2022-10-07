@@ -63,6 +63,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         return new Promise((resolve) => {
             let initTime = new Date().getTime();
             let timing = 0;
+            let isCancel = false;
             const waiting = () => {
                 requestAnimation(() => {
                     timing = new Date().getTime() - initTime;
@@ -72,8 +73,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
                         resolve(timing);
                     }
                     else {
-                        onUpdate === null || onUpdate === void 0 ? void 0 : onUpdate(percent);
-                        waiting();
+                        const cancel = () => {
+                            isCancel = true;
+                        };
+                        onUpdate === null || onUpdate === void 0 ? void 0 : onUpdate(percent, cancel);
+                        if (isCancel)
+                            resolve(timing);
+                        else
+                            waiting();
                     }
                 });
             };
@@ -91,8 +98,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
             const { mode = 'random', handler, onUpdate } = options;
             let waitFinallyPercent = handler ? STAY_PERCENT_WHEN_HANDLE_TIMEOUT : 1;
             const handlerPromise = handler ? handler() : Promise.resolve();
-            const waitPromise = yield pureWait(duration, mode, (percent) => {
-                onUpdate === null || onUpdate === void 0 ? void 0 : onUpdate(Math.round(percent * waitFinallyPercent * 10000) / 10000);
+            const waitPromise = yield pureWait(duration, mode, (percent, cancel) => {
+                onUpdate === null || onUpdate === void 0 ? void 0 : onUpdate(Math.round(percent * waitFinallyPercent * 10000) / 10000, cancel);
             });
             const [handlerResult] = yield Promise.all([handlerPromise, waitPromise]);
             if (handler)
